@@ -30,11 +30,16 @@
       d3.csv('platform_globalsale.csv').then(data => {
           // calculationg scales: 
           yScale.domain(data.map(yValue)).range([0, innerHeight]).padding(0.1);
-          xScale.domain([0, d3.max(data, xValue)]).range([0, innerWidth]);   
+          xScale.domain([0, d3.max(data, xValue)]).range([0, innerWidth]);
+          // color scheme
+          const color = d3.scaleOrdinal().domain(data.map(yValue)).range(d3.schemeSet3);
           // data-join for rectangles: 
           mainGroup.selectAll('rect').data(data).join('rect')
-          .attr('height', yScale.bandwidth()).attr('width', d => xScale(xValue(d)))
-          .attr('x', 0).attr('y', d => yScale(yValue(d)));
+          .attr('height', yScale.bandwidth())
+          .attr('x', 0).attr('y', d => yScale(yValue(d)))
+          .transition().duration(2000)
+          .attr('width', d => xScale(xValue(d)))
+          .attr('fill', color);
           // adding axes: 
           const xAxisMethod = d3.axisBottom(xScale);
           const yAxisMethod = d3.axisLeft(yScale);
